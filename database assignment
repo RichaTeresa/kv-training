@@ -1,0 +1,46 @@
+select ed.emp_id,e.e_name,dept.dept_name,desg.desg_name,s.salary
+from employee e join emp_dept ed on e.e_id =ed.emp_id 
+join department dept on ed.dept_id= dept.dept_id
+join emp_desg ed2 on e.e_id =ed2.emp_id
+join designation desg on desg.desg_id =ed2.desg_id
+join salary s on e.e_id =s.emp_id 
+where ed.end_date is null and ed2.end_date is null and s.end_date is null
+
+
+select d.dept_id ,d.dept_name,count(*) as count_of_emp
+from department d join emp_dept ed on d.dept_id =ed.dept_id
+where ed.end_date is null
+group by d.dept_id
+order by d.dept_id
+
+
+
+select d.dept_id ,d.dept_name,max(s.salary)
+from department d join emp_dept ed on d.dept_id =ed.dept_id
+join salary s on ed.emp_id =s.emp_id
+where ed.end_date is null
+group by d.dept_id
+order by d.dept_id
+
+select e.e_id ,e.e_name,count(*) as no_of_dept
+from employee e join emp_desg ed on e.e_id =ed.emp_id
+group by e.e_id 
+having count(*) >1
+order by e.e_id
+
+select e.e_id ,e.e_name,count(*)-1 as times_changed
+from employee e join emp_dept ed on e.e_id =ed.emp_id
+group by e.e_id 
+having count(*) >1
+order by e.e_id
+
+select avg(salary) from salary where end_date is null
+
+
+select e.e_id,e.e_name,s.salary
+from employee e join salary s on e.e_id =s.emp_id
+where s.salary >(
+  select avg(salary) from salary
+  where end_date is null
+)  
+order by e.e_id 
